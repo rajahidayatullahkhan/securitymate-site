@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Security Mate — Unarmed Static Guarding, Victoria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05070B; --panel:#0C1118; --panel2:#0F1520;
+    --line:rgba(125,240,214,0.14);
+    --cyan:#4CF2D6; --violet:#8B7CFF;
+    --ink:#E7ECEE; --dim:#8B97A3;
+    box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{
+    background:
+      radial-gradient(900px 500px at 85% -10%, rgba(139,124,255,0.14), transparent 60%),
+      radial-gradient(700px 500px at 10% 0%, rgba(76,242,214,0.08), transparent 55%),
+      var(--bg);
+    color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;} img,svg{max-width:100%;display:block;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  header{position:sticky;top:0;top:env(safe-area-inset-top,0px);z-index:10;background:rgba(5,7,11,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;max-width:1120px;margin:0 auto;}
+  .brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;display:flex;align-items:center;gap:10px;}
+  .brand span{color:var(--cyan);}
+  .brand svg{width:26px;height:26px;flex-shrink:0;}
+  nav.links{display:flex;gap:26px;font-size:14px;}
+  nav.links a{text-decoration:none;color:var(--dim);}
+  nav.links a:hover{color:var(--ink);}
+  .call-btn{background:linear-gradient(90deg,var(--cyan),var(--violet));color:#05070B;padding:9px 18px;border-radius:3px;text-decoration:none;font-weight:600;font-size:14px;}
+
+  .hero{padding:90px 0 0;border-bottom:1px solid var(--line);position:relative;}
+  .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:40px;align-items:center;padding-bottom:56px;}
+  @media(max-width:860px){.hero-grid{grid-template-columns:1fr;}}
+  .eyebrow{font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:13px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:20px;}
+  .eyebrow::before{content:"● ";}
+  .hero h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(36px,5.6vw,58px);line-height:1.06;letter-spacing:-0.01em;}
+  .hero h1 .grad{background:linear-gradient(90deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p.lede{margin-top:22px;max-width:52ch;font-size:17px;color:var(--dim);}
+  .hero .actions{margin-top:30px;display:flex;gap:16px;flex-wrap:wrap;}
+  .btn-primary{background:linear-gradient(90deg,var(--cyan),var(--violet));color:#05070B;padding:13px 26px;border-radius:3px;text-decoration:none;font-weight:600;}
+  .btn-ghost{border:1px solid var(--line);color:var(--ink);padding:13px 26px;border-radius:3px;text-decoration:none;font-weight:500;}
+
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:52px;}
+  @media(max-width:680px){.stat-row{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px 18px;}
+  .stat .num{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--cyan);}
+  .stat .lbl{font-size:11.5px;color:var(--dim);margin-top:4px;font-family:'JetBrains Mono',monospace;letter-spacing:0.03em;}
+
+  section{padding:64px 0;border-bottom:1px solid var(--line);}
+  h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(26px,3.6vw,34px);}
+  .section-intro{max-width:60ch;color:var(--dim);margin-top:12px;font-size:16px;}
+
+  /* About */
+  .about-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:44px;align-items:center;margin-top:40px;}
+  @media(max-width:860px){.about-grid{grid-template-columns:1fr;}}
+  .about-grid p{color:var(--dim);font-size:16px;margin-bottom:14px;}
+  .about-grid strong{color:var(--ink);}
+
+  /* Feature grid */
+  .feature-grid{margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;}
+  .feature{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:26px 22px;}
+  .feature .ic{width:34px;height:34px;margin-bottom:14px;}
+  .feature h4{font-family:'Space Grotesk',sans-serif;font-size:16px;margin-bottom:8px;}
+  .feature p{font-size:14px;color:var(--dim);}
+
+  .service-block{margin-top:40px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:44px;}
+  @media(max-width:720px){.service-block{grid-template-columns:1fr;}}
+  .service-block .desc p{color:var(--dim);font-size:16px;margin-bottom:16px;}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:26px;}
+  .checklist{list-style:none;}
+  .checklist li{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);font-size:15px;}
+  .checklist li:first-child{border-top:none;padding-top:0;}
+  .checklist li::before{content:"—";color:var(--cyan);flex-shrink:0;}
+
+  .site-scene{margin-top:40px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;}
+  .site-scene .cap{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--dim);letter-spacing:0.04em;margin-top:12px;text-align:center;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+  .beacon{animation:blink 1.4s ease-in-out infinite;}
+
+  .region-grid{margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+  .region{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:26px;}
+  .region .tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);letter-spacing:0.06em;}
+  .region .areas{margin-top:10px;font-size:15px;color:var(--dim);}
+
+  .credentials{margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+  .cred{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px;}
+  .cred .n{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);letter-spacing:0.06em;}
+  .cred .v{margin-top:8px;font-size:15px;color:var(--ink);}
+
+  .membership{margin-top:32px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:24px 26px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .membership .badge{background:#fff;border-radius:6px;padding:8px 14px;flex-shrink:0;}
+  .membership .badge img{height:34px;width:auto;display:block;}
+  .membership p{font-size:14px;color:var(--dim);margin:0;}
+
+  .cta-band{padding:60px 0;text-align:center;border-bottom:1px solid var(--line);background:var(--panel2);}
+  .cta-band h2{font-size:clamp(24px,4vw,32px);}
+  .cta-band p{color:var(--dim);margin-top:10px;}
+  .cta-band .actions{margin-top:26px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;}
+
+  .quote-form{max-width:560px;margin:36px auto 0;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:28px;}
+  .quote-form .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:560px){.quote-form .row{grid-template-columns:1fr;}}
+  .quote-form label{display:block;font-size:12.5px;color:var(--dim);margin-bottom:6px;font-family:'JetBrains Mono',monospace;letter-spacing:0.03em;}
+  .quote-form input, .quote-form textarea{
+    width:100%;background:#05070B;border:1px solid var(--line);border-radius:4px;color:var(--ink);
+    padding:11px 12px;font-family:'Inter',sans-serif;font-size:14.5px;margin-bottom:16px;
+  }
+  .quote-form input:focus, .quote-form textarea:focus{outline:none;border-color:var(--cyan);}
+  .quote-form textarea{resize:vertical;min-height:90px;}
+  .quote-form button{
+    width:100%;background:linear-gradient(90deg,var(--cyan),var(--violet));color:#05070B;border:none;
+    padding:13px 26px;border-radius:3px;font-weight:600;font-size:15px;cursor:pointer;font-family:'Inter',sans-serif;
+  }
+  .quote-form button:hover{opacity:0.92;}
+  .form-note{font-size:12.5px;color:var(--dim);margin-top:12px;text-align:center;}
+  .form-status{font-size:14px;margin-top:10px;text-align:center;display:none;}
+  .form-status.ok{color:var(--cyan);}
+  .form-status.err{color:#FF8383;}
+  .field-err{display:block;font-size:12.5px;color:#FF8383;margin-top:-12px;margin-bottom:14px;min-height:1px;}
+
+  footer{padding:50px 0 60px;}
+  .foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;}
+  .foot-grid h3{font-family:'Space Grotesk',sans-serif;font-size:20px;margin-bottom:14px;}
+  .foot-grid p, .foot-grid a{font-size:15px;color:var(--dim);text-decoration:none;display:block;margin-bottom:6px;}
+  .fine{margin-top:44px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:#5D6873;}
+  .ack{margin-top:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .ack svg{width:30px;height:20px;border-radius:2px;flex-shrink:0;}
+  .ack p{font-size:12.5px;color:#5D6873;max-width:60ch;margin:0;}
+
+  ::selection{background:var(--cyan);color:#05070B;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">
+      <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#E8C468"/>
+            <stop offset="1" stop-color="#B8862F"/>
+          </linearGradient>
+        </defs>
+        <circle cx="22" cy="22" r="20" fill="#0C1118" stroke="url(#gold)" stroke-width="1.4"/>
+        <!-- laurel left -->
+        <g stroke="url(#gold)" stroke-width="1.3" fill="none" stroke-linecap="round">
+          <path d="M13 30 C9 26 8 18 12 11"/>
+          <path d="M12 26 L8 25 M12.5 21 L8.3 20.5 M13.5 16 L9.6 15"/>
+        </g>
+        <!-- laurel right -->
+        <g stroke="url(#gold)" stroke-width="1.3" fill="none" stroke-linecap="round">
+          <path d="M31 30 C35 26 36 18 32 11"/>
+          <path d="M32 26 L36 25 M31.5 21 L35.7 20.5 M30.5 16 L34.4 15"/>
+        </g>
+        <!-- shield -->
+        <path d="M22 12 L29 15 V22 C29 27 26 30 22 32 C18 30 15 27 15 22 V15 Z" fill="#0C1118" stroke="url(#gold)" stroke-width="1.6"/>
+        <path d="M18.5 21.5 L21 24 L26 18" fill="none" stroke="url(#gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      SECURITY <span>MATE</span>
+    </div>
+    <nav class="links">
+      <a href="#about">About</a>
+      <a href="#service">Service</a>
+      <a href="#coverage">Coverage</a>
+      <a href="#credentials">Credentials</a>
+    </nav>
+    <a class="call-btn" href="tel:0403777923">Call now</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Victoria-wide — unarmed static guarding</div>
+        <h1>Guards on site, <span class="grad">not on hold.</span></h1>
+        <p class="lede">Security Mate provides unarmed static guarding and mobile patrols for businesses, distribution centres, construction sites and properties across Melbourne, Geelong and Ballarat — briefed properly, on time, every shift.</p>
+        <div class="actions">
+          <a class="btn-primary" href="#contact">Request guards</a>
+          <a class="btn-ghost" href="tel:0403777923">0403 777 923</a>
+        </div>
+      </div>
+      <div>
+        <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#4CF2D6"/>
+              <stop offset="1" stop-color="#8B7CFF"/>
+            </linearGradient>
+          </defs>
+          <circle cx="160" cy="160" r="150" fill="none" stroke="rgba(125,240,214,0.18)" stroke-width="1"/>
+          <circle cx="160" cy="160" r="115" fill="none" stroke="rgba(125,240,214,0.14)" stroke-width="1"/>
+          <circle cx="160" cy="160" r="80" fill="none" stroke="url(#g1)" stroke-width="1.4" stroke-dasharray="6 8"/>
+          <path d="M160 90 L215 112 V165 C215 205 190 232 160 246 C130 232 105 205 105 165 V112 Z"
+                fill="rgba(12,17,24,0.9)" stroke="url(#g1)" stroke-width="2.5"/>
+          <path d="M137 170 L152 186 L186 148" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">3</div><div class="lbl">CITIES COVERED</div></div>
+      <div class="stat"><div class="num">24/7</div><div class="lbl">AVAILABILITY</div></div>
+      <div class="stat"><div class="num">$10M</div><div class="lbl">PUBLIC LIABILITY</div></div>
+      <div class="stat"><div class="num">100%</div><div class="lbl">LICENSED &amp; INSURED</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <h2>Who we are</h2>
+    <div class="about-grid">
+      <svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#4CF2D6"/>
+            <stop offset="1" stop-color="#8B7CFF"/>
+          </linearGradient>
+        </defs>
+        <rect x="10" y="10" width="260" height="260" rx="12" fill="#0C1118" stroke="rgba(125,240,214,0.16)"/>
+        <!-- left shield: fingerprint -->
+        <g transform="translate(58,150) rotate(-8)" opacity="0.85">
+          <path d="M0 -46 L38 -30 V14 C38 40 20 56 0 64 C-20 56 -38 40 -38 14 V-30 Z" fill="#0C1118" stroke="url(#g2)" stroke-width="1.6"/>
+          <g fill="none" stroke="url(#g2)" stroke-width="1.3">
+            <path d="M-16 0 a16 16 0 0 1 32 0 v6 a16 16 0 0 1 -6 12"/>
+            <path d="M-10 0 a10 10 0 0 1 20 0 v10"/>
+            <path d="M-2 -18 v18 a2 2 0 0 0 4 8"/>
+          </g>
+        </g>
+        <!-- centre shield: padlock (largest, foreground) -->
+        <g transform="translate(140,140)">
+          <path d="M0 -58 L48 -38 V18 C48 50 26 70 0 80 C-26 70 -48 50 -48 18 V-38 Z" fill="#0C1118" stroke="url(#g2)" stroke-width="2.4"/>
+          <rect x="-16" y="-6" width="32" height="26" rx="4" fill="none" stroke="url(#g2)" stroke-width="2.4"/>
+          <path d="M-10 -6 v-10 a10 10 0 0 1 20 0 v10" fill="none" stroke="url(#g2)" stroke-width="2.4"/>
+          <circle cx="0" cy="8" r="3" fill="url(#g2)"/>
+        </g>
+        <!-- right shield: check -->
+        <g transform="translate(222,150) rotate(8)" opacity="0.85">
+          <path d="M0 -46 L38 -30 V14 C38 40 20 56 0 64 C-20 56 -38 40 -38 14 V-30 Z" fill="#0C1118" stroke="url(#g2)" stroke-width="1.6"/>
+          <path d="M-16 0 L-4 12 L18 -12" fill="none" stroke="url(#g2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </svg>
+      <div>
+        <p>Security Mate is an <strong>Australian, locally owned and operated</strong> security company. Our owner has worked in the security industry themselves — not just managed it on paper — and that hands-on experience shapes how every site is assessed, every guard is briefed, and every shift is held to account.</p>
+        <p>Because we've stood the posts ourselves, we know the difference between a guard who's just present and one who's actually paying attention. That's the standard we hold every engagement to.</p>
+        <p>We keep our service narrow on purpose: unarmed static guarding, done consistently, rather than a long list of services spread thin.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="service">
+  <div class="wrap">
+    <h2>What we do</h2>
+    <p class="section-intro">Static, unarmed guarding and mobile patrols for sites that need a visible, dependable presence.</p>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#4CF2D6" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-6"/></svg>
+        <h4>Site briefing</h4>
+        <p>Every guard is briefed on your procedures, access points and escalation contacts before the first shift.</p>
+      </div>
+      <div class="feature">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#4CF2D6" stroke-width="1.6"><path d="M3 17 L8 7 L13 15 L17 9 L21 17" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="17" r="1.4" fill="#4CF2D6" stroke="none"/></svg>
+        <h4>Mobile patrols</h4>
+        <p>Scheduled or randomised patrol runs across multi-site or perimeter locations, with checkpoint logging.</p>
+      </div>
+      <div class="feature">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#4CF2D6" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <h4>24/7 coverage</h4>
+        <p>Day, night, weekend and public holiday shifts, covered at rates aligned to the Security Services Award.</p>
+      </div>
+      <div class="feature">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#4CF2D6" stroke-width="1.6"><path d="M4 19V5a2 2 0 012-2h9l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M14 3v5h5"/></svg>
+        <h4>Incident logging</h4>
+        <p>Access and incident records kept for every shift, so you have a clear paper trail if anything happens.</p>
+      </div>
+      <div class="feature">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#4CF2D6" stroke-width="1.6"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+        <h4>Fast response</h4>
+        <p>Call, text or email and reach us directly to scope urgent or short-notice coverage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="coverage">
+  <div class="wrap">
+    <h2>Coverage</h2>
+    <p class="section-intro">Deploying across Victoria's major centres.</p>
+    <div class="region-grid">
+      <div class="region"><div class="tag mono">MELBOURNE</div><div class="areas">Metro-wide, all suburbs</div></div>
+      <div class="region"><div class="tag mono">GEELONG</div><div class="areas">Geelong &amp; surrounding region</div></div>
+      <div class="region"><div class="tag mono">BALLARAT</div><div class="areas">Ballarat &amp; surrounding region</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="credentials">
+  <div class="wrap">
+    <h2>Credentials</h2>
+    <p class="section-intro">What's in place, in plain terms.</p>
+    <div class="credentials">
+      <div class="cred"><div class="n mono">COMPANY</div><div class="v">Security Mate Pty Ltd<br>ABN 94 702 730 694</div></div>
+      <div class="cred"><div class="n mono">INSURANCE</div><div class="v">Public liability cover held for unarmed guarding activities</div></div>
+      <div class="cred"><div class="n mono">PRICING</div><div class="v">Aligned to Security Services Award pay rates</div></div>
+    </div>
+
+    <div class="membership">
+      <div class="badge">
+        <img src="data:image/png;base64,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" alt="AISP — Association of Investigators and Security Professionals">
+      </div>
+      <p>We are a proud member of the Association of Investigators and Security Professionals (AISP), an approved security industry organisation under Victoria's Private Security Act.</p>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band" id="contact">
+  <div class="wrap">
+    <h2>Need a guard on site?</h2>
+    <p>Tell us the site, the hours, and we'll scope it directly with you.</p>
+    <div class="actions">
+      <a class="btn-primary" href="tel:0403777923">Call 0403 777 923</a>
+      <a class="btn-ghost" href="mailto:adminsecuritymate@gmail.com">Email us</a>
+    </div>
+
+    <form class="quote-form" id="quoteForm" action="https://formspree.io/f/xzezookl" method="POST">
+      <div class="row">
+        <div>
+          <label for="qf-name">Name</label>
+          <input type="text" id="qf-name" name="name" required>
+          <span class="field-err" id="err-name"></span>
+        </div>
+        <div>
+          <label for="qf-phone">Phone</label>
+          <input type="tel" id="qf-phone" name="phone" required>
+          <span class="field-err" id="err-phone"></span>
+        </div>
+      </div>
+      <label for="qf-email">Email</label>
+      <input type="email" id="qf-email" name="email" required>
+      <span class="field-err" id="err-email"></span>
+      <label for="qf-site">Site / suburb</label>
+      <input type="text" id="qf-site" name="site_location" placeholder="e.g. Distribution centre, Tarneit">
+      <label for="qf-message">What do you need?</label>
+      <textarea id="qf-message" name="message" placeholder="e.g. 1 guard, night shift, starting this week" required></textarea>
+      <span class="field-err" id="err-message"></span>
+      <button type="submit">Send request</button>
+      <div class="form-status" id="qf-status"></div>
+    </form>
+    <p class="form-note">Goes straight to adminsecuritymate@gmail.com — usually answered within a few hours.</p>
+  </div>
+</div>
+
+<script>
+  const qf = document.getElementById('quoteForm');
+  const qfStatus = document.getElementById('qf-status');
+  const fieldErrEls = {
+    name: document.getElementById('err-name'),
+    phone: document.getElementById('err-phone'),
+    email: document.getElementById('err-email'),
+    message: document.getElementById('err-message'),
+  };
+  function clearFieldErrors(){
+    Object.values(fieldErrEls).forEach(el => el.textContent = '');
+  }
+  qf.addEventListener('submit', async function(e){
+    e.preventDefault();
+    clearFieldErrors();
+    qfStatus.style.display = 'block';
+    qfStatus.className = 'form-status';
+    qfStatus.textContent = 'Sending…';
+    try{
+      const res = await fetch(qf.action, {
+        method: 'POST',
+        body: new FormData(qf),
+        headers: { 'Accept': 'application/json' }
+      });
+      const data = await res.json().catch(() => ({}));
+      if(res.ok){
+        qfStatus.className = 'form-status ok';
+        qfStatus.textContent = "Sent — we'll be in touch shortly.";
+        qf.reset();
+      } else if (data && Array.isArray(data.errors) && data.errors.length){
+        qfStatus.className = 'form-status err';
+        qfStatus.textContent = 'Please check the highlighted fields.';
+        data.errors.forEach(err => {
+          const el = fieldErrEls[err.field];
+          if(el) el.textContent = err.message;
+        });
+      } else {
+        qfStatus.className = 'form-status err';
+        qfStatus.textContent = 'Something went wrong — please call or email us directly.';
+      }
+    } catch(err){
+      qfStatus.className = 'form-status err';
+      qfStatus.textContent = 'Something went wrong — please call or email us directly.';
+    }
+  });
+</script>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h3>Security Mate</h3>
+        <p>Unarmed static guarding across Victoria.</p>
+      </div>
+      <div>
+        <h3>Get in touch</h3>
+        <a href="tel:0403777923">0403 777 923</a>
+        <a href="mailto:adminsecuritymate@gmail.com">adminsecuritymate@gmail.com</a>
+        <p>Melbourne, Australia</p>
+      </div>
+    </div>
+    <div class="fine">© 2026 Security Mate Pty Ltd. ABN 94 702 730 694. Proudly Australian owned and operated.</div>
+    <div class="ack">
+      <svg viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg" aria-label="Australian flag">
+        <rect width="30" height="20" fill="#00247D"/>
+        <rect width="15" height="10" fill="#00247D"/>
+        <path d="M0 0 L15 10 M15 0 L0 10" stroke="#fff" stroke-width="2"/>
+        <path d="M0 0 L15 10 M15 0 L0 10" stroke="#CF142B" stroke-width="1"/>
+        <path d="M7.5 0 V10 M0 5 H15" stroke="#fff" stroke-width="3"/>
+        <path d="M7.5 0 V10 M0 5 H15" stroke="#CF142B" stroke-width="1.4"/>
+        <g fill="#fff">
+          <circle cx="22" cy="4" r="0.9"/><circle cx="26" cy="7" r="0.9"/><circle cx="24" cy="11" r="0.9"/><circle cx="20" cy="10" r="0.9"/><circle cx="23" cy="7.5" r="0.6"/>
+        </g>
+        <circle cx="7.5" cy="15" r="1.1" fill="#fff"/>
+      </svg>
+      <svg viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg" aria-label="Aboriginal flag">
+        <rect width="30" height="10" fill="#000"/>
+        <rect y="10" width="30" height="10" fill="#CE1126"/>
+        <circle cx="15" cy="10" r="6.2" fill="#FFC900"/>
+      </svg>
+      <p>Security Mate acknowledges the Traditional Owners of the land on which we operate across Victoria, and pays respect to Elders past and present.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
