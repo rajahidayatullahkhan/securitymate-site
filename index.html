@@ -510,6 +510,22 @@
   .hero-media img { object-position: 0% center; }
   .membership .badge-box { background: #fff; width: 170px; height: 176px; padding: 10px; }
   .membership .badge-box img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+  /* Mobile header: keep logo, Call Now and menu button on one line */
+  .brand { white-space: nowrap; }
+  .call-btn { white-space: nowrap; }
+  @media (max-width: 680px) {
+    .nav { gap: 10px; }
+    .brand { font-size: 18px; gap: 8px; letter-spacing: 0; min-width: 0; }
+    .brand svg { width: 28px; height: 28px; }
+    .header-actions { gap: 8px; flex-shrink: 0; }
+    .call-btn { padding: 8px 12px; font-size: 13px; }
+  }
+  @media (max-width: 380px) {
+    .brand { font-size: 15px; gap: 6px; }
+    .brand svg { width: 24px; height: 24px; }
+    .call-btn { padding: 7px 10px; font-size: 12px; }
+  }
 </style>
 </head>
 <body>
